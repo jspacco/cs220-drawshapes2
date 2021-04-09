@@ -249,7 +249,17 @@ public class DrawShapes extends JFrame
                 color = Color.BLUE;
             }
         });
-        
+
+        // green color
+        addToMenu(colorMenu, "Green", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String text=e.getActionCommand();
+                System.out.println(text);
+                // change the color instance variable to green
+                color = Color.GREEN;
+            }
+        });
+
         // shape menu
         JMenu shapeMenu = new JMenu("Shape");
         menuBar.add(shapeMenu);
@@ -355,7 +365,7 @@ public class DrawShapes extends JFrame
      */
     public static void main(String[] args)
     {
-        DrawShapes shapes=new DrawShapes(700, 600);
+        DrawShapes shapes=new DrawShapes(700, 700);
         shapes.setVisible(true);
     }
 
