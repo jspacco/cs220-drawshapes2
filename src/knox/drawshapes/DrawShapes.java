@@ -250,6 +250,16 @@ public class DrawShapes extends JFrame
             }
         });
         
+        addToMenu(colorMenu, "Green", new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String text=e.getActionCommand();
+                System.out.println(text);
+                // change the color instance variable to red
+                color = Color.GREEN;
+			}
+		});
+        
         // shape menu
         JMenu shapeMenu = new JMenu("Shape");
         menuBar.add(shapeMenu);
