@@ -34,7 +34,7 @@ public class DrawShapes extends JFrame
     private DrawShapesPanel shapePanel;
     private Scene scene;
     private ShapeType shapeType = ShapeType.SQUARE;
-    private Color color = Color.RED;
+    private Color color = Color.GREEN;
     private Point startDrag;
 
 
@@ -236,7 +236,7 @@ public class DrawShapes extends JFrame
 				String text=e.getActionCommand();
                 System.out.println(text);
                 // change the color instance variable to red
-                color = Color.RED;
+                color = Color.GREEN;
 			}
 		});
         
@@ -246,7 +246,7 @@ public class DrawShapes extends JFrame
                 String text=e.getActionCommand();
                 System.out.println(text);
                 // change the color instance variable to blue
-                color = Color.BLUE;
+                color = Color.GREEN;
             }
         });
         
