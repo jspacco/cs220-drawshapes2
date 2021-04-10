@@ -250,6 +250,16 @@ public class DrawShapes extends JFrame
             }
         });
         
+     // green color
+        addToMenu(colorMenu, "Green", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String text=e.getActionCommand();
+                System.out.println(text);
+                // change the color instance variable to blue
+                color = Color.GREEN;
+            }
+        });
+        
         // shape menu
         JMenu shapeMenu = new JMenu("Shape");
         menuBar.add(shapeMenu);
@@ -272,6 +282,14 @@ public class DrawShapes extends JFrame
             }
         });
         
+     // rectangle
+        addToMenu(shapeMenu, "Rectangle", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Circle");
+                shapeType = ShapeType.RECTANGLE;
+            }
+        });
         
         // operation mode menu
         JMenu operationModeMenu=new JMenu("Operation");
