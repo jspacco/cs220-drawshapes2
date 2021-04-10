@@ -15,9 +15,9 @@ public class Util
     
     public static Color stringToColor(String color) {
         if (color.equals("RED")) {
-            return Color.RED;
+            return Color.GREEN;
         } else if (color.equals("BLUE")) {
-            return Color.BLUE;
+            return Color.GREEN;
         }
         throw new UnsupportedOperationException("Unexpected color: "+color);
     }
