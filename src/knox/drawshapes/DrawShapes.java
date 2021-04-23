@@ -15,7 +15,9 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
+import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -28,7 +30,9 @@ public class DrawShapes extends JFrame
     private enum ShapeType {
         SQUARE,
         CIRCLE,
-        RECTANGLE
+        RECTANGLE,
+        TRIANGLE
+        
     }
     
     private DrawShapesPanel shapePanel;
@@ -89,6 +93,8 @@ public class DrawShapes extends JFrame
                                 100, 
                                 200,
                                 color));
+                    } else if (shapeType ==ShapeType.TRIANGLE) {
+                    	scene.addShape(new Triangle(e.getPoint(), 100, color));
                     }
                     
                 } else if (e.getButton()==MouseEvent.BUTTON2) {
@@ -219,8 +225,7 @@ public class DrawShapes extends JFrame
                 System.exit(0);
             }
         });
-
-        
+             
         // OK, it's annoying to create menu items this way,
         // so let's use a helper method
         
@@ -240,6 +245,36 @@ public class DrawShapes extends JFrame
 			}
 		});
         
+        // orange color
+        addToMenu(colorMenu, "Orange", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String text=e.getActionCommand();
+                System.out.println(text);
+                // change the color instance variable to blue
+                color = Color.ORANGE;
+            }
+        });
+        
+        // yellow color
+        addToMenu(colorMenu, "Yellow", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String text=e.getActionCommand();
+                System.out.println(text);
+                // change the color instance variable to blue
+                color = Color.YELLOW;
+            }
+        });
+        
+     // green color
+        addToMenu(colorMenu, "Green", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String text=e.getActionCommand();
+                System.out.println(text);
+                // change the color instance variable to blue
+                color = Color.GREEN;
+            }
+        });
+        
         // blue color
         addToMenu(colorMenu, "Blue", new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -250,13 +285,28 @@ public class DrawShapes extends JFrame
             }
         });
         
-     // blue color
-        addToMenu(colorMenu, "Green", new ActionListener() {
+        //random color
+        addToMenu(colorMenu, "Random", new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String text=e.getActionCommand();
                 System.out.println(text);
                 // change the color instance variable to blue
-                color = Color.GREEN;
+                int random = (int)(Math.random() * 5);
+                if (random==1) {
+                	color = Color.RED;
+                }
+                if (random==2) {
+                	color = Color.ORANGE;
+                }        
+                if (random==3) {
+                	color = Color.YELLOW;
+                }
+                if (random==4) {
+                	color = Color.GREEN;
+                }
+                if (random==5) {
+                	color = Color.BLUE;
+                }
             }
         });
         
@@ -279,6 +329,31 @@ public class DrawShapes extends JFrame
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Circle");
                 shapeType = ShapeType.CIRCLE;
+            }
+        });
+        
+        addToMenu(shapeMenu, "Triangle", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Triangle");
+                shapeType = ShapeType.TRIANGLE;
+            }
+        });
+        
+        addToMenu(shapeMenu, "Random", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Triangle");
+                int random = (int)(Math.random() * 3);
+                if (random==1) {
+                    shapeType = ShapeType.SQUARE;
+                }
+                if (random==2) {
+                    shapeType = ShapeType.CIRCLE;
+                }        
+                if (random==3) {
+                    shapeType = ShapeType.TRIANGLE;
+                }
             }
         });
         
@@ -316,7 +391,23 @@ public class DrawShapes extends JFrame
             }
         });
         
-
+        addToMenu(operationModeMenu, "Clear", new ActionListener(){
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		scene.clear();
+        		repaint();
+        	}
+        });
+        
+        addToMenu(operationModeMenu, "Erase", new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                String text=e.getActionCommand();
+                System.out.println(text);
+                scene.removeSelected();
+        		repaint();
+            }
+        });
+        
         // set the menu bar for this frame
         this.setJMenuBar(menuBar);
     }
@@ -341,6 +432,10 @@ public class DrawShapes extends JFrame
             		scene.moveSelected(-50, 0);
             	} else if (e.getKeyCode() == KeyEvent.VK_UP) {
             		scene.moveSelected(0, -50);
+            	} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            		scene.moveSelected(50, 0);
+            	} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                		scene.moveSelected(0, 50);
             	}
             	repaint();
             }
@@ -352,11 +447,18 @@ public class DrawShapes extends JFrame
             	// Gets called when you push a key down and then release it,
             	// without pushing any other keys in between
             	System.out.println("key typed: " + e.getKeyChar());
+            	if(e.getKeyChar() == KeyEvent.VK_U) {
+            		scene.scale(2);
+            	}
+            	if(e.getKeyChar() == KeyEvent.VK_D) {
+            		scene.scale(.5);
+            	}
             	if (e.getKeyChar() == KeyEvent.VK_BACK_SPACE) {
             		scene.removeSelected();
             	}
             	repaint();
             }
+            	
         });
     }
     

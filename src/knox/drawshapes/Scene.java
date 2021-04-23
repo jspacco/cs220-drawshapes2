@@ -212,10 +212,14 @@ public class Scene implements Iterable<IShape>
 			if (s.isSelected()) s.scale(d);
 		}
 	}
-
+	
 	public void moveSelected(int dx, int dy) {
 		for (IShape s : shapeList) {
 			if (s.isSelected()) s.move(dx, dy);
 		}
+	}
+	
+	public void clear() {
+		shapeList.clear();
 	}
 }
