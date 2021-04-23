@@ -9,7 +9,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -35,7 +34,6 @@ public class DrawShapes extends JFrame
     private Scene scene;
     private ShapeType shapeType = ShapeType.SQUARE;
     private Color color = Color.RED;
-    private Point startDrag;
 
 
     public DrawShapes(int width, int height)
@@ -69,6 +67,7 @@ public class DrawShapes extends JFrame
     {
         MouseAdapter a = new MouseAdapter() {
             
+        	@Override
             public void mouseClicked(MouseEvent e)
             {
                 System.out.printf("Mouse cliked at (%d, %d)\n", e.getX(), e.getY());
@@ -139,10 +138,7 @@ public class DrawShapes extends JFrame
                 repaint();
             }
 
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e) {
-                // TODO use this to grow/shrink shapes
-            }
+           
             
         };
         shapePanel.addMouseMotionListener(a);
@@ -181,6 +177,8 @@ public class DrawShapes extends JFrame
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
+                } else {
+                	System.out.println("Cancel!");
                 }
             }
         });
@@ -305,6 +303,15 @@ public class DrawShapes extends JFrame
                 System.out.println(text);
             }
         });
+        
+        addToMenu(operationModeMenu, "Clear", new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				scene.clear();
+				repaint();
+			}
+		});
         
 
         // set the menu bar for this frame

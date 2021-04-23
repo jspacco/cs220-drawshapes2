@@ -10,6 +10,8 @@ public class Rectangle extends AbstractShape
     protected int height;
     
     public Rectangle(Point center, int width, int height, Color color){
+    	// super constructor call must be the first line of Java code in
+    	// a constructor that extends a base class
     	super(new Point(center.x, center.y), color);
         boundingBox = new BoundingBox(center.x - width/2, center.x + width/2, center.y - height/2, center.y + height/2);
         this.width = width;
@@ -36,7 +38,7 @@ public class Rectangle extends AbstractShape
         		width, height);
     }
 
-    public String toString() {
+    public String toString2() {
         return String.format("RECTANGLE (%d, %d) width=%d height=%d color=%s selected? %s", 
                 getAnchorPoint().x,
                 getAnchorPoint().y,
@@ -46,7 +48,7 @@ public class Rectangle extends AbstractShape
                 selected);
     }
     
-    public String encode() {
+    public String toString() {
     	return String.format("RECTANGLE %d %d %d %d %s %s", 
                 getAnchorPoint().x,
                 getAnchorPoint().y,

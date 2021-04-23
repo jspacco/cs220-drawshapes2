@@ -15,10 +15,6 @@ import java.awt.Point;
  * @author jspacco
  *
  */
-/**
- * @author jaimespacco
- *
- */
 public interface IShape extends IMoveableShape
 {
     /**

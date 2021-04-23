@@ -162,9 +162,6 @@ public class Scene implements Iterable<IShape>
     }
     
     
-    
-    
-    
     public void loadFromFile(String filename)
     throws IOException
     {
@@ -217,5 +214,9 @@ public class Scene implements Iterable<IShape>
 		for (IShape s : shapeList) {
 			if (s.isSelected()) s.move(dx, dy);
 		}
+	}
+	
+	public void clear() {
+		shapeList.clear();
 	}
 }
