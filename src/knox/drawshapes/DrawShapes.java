@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -28,7 +29,8 @@ public class DrawShapes extends JFrame
     private enum ShapeType {
         SQUARE,
         CIRCLE,
-        RECTANGLE
+        RECTANGLE,
+        TRIANGLE
     }
     
     private DrawShapesPanel shapePanel;
@@ -65,8 +67,10 @@ public class DrawShapes extends JFrame
         });
     }
     
+    
     private void initializeMouseListener()
     {
+    	
         MouseAdapter a = new MouseAdapter() {
             
             public void mouseClicked(MouseEvent e)
@@ -74,6 +78,7 @@ public class DrawShapes extends JFrame
                 System.out.printf("Mouse cliked at (%d, %d)\n", e.getX(), e.getY());
                 
                 if (e.getButton()==MouseEvent.BUTTON1) { 
+      
                     if (shapeType == ShapeType.SQUARE) {
                         scene.addShape(new Square(color, 
                                 e.getX(), 
@@ -88,6 +93,12 @@ public class DrawShapes extends JFrame
                                 e.getPoint(),
                                 100, 
                                 200,
+                                color));
+                    } else if (shapeType == ShapeType.TRIANGLE) {
+                    	System.out.println("Yes");
+                        scene.addShape(new Triangle(
+                                e.getPoint(),
+                                100, 100,
                                 color));
                     }
                     
@@ -118,8 +129,7 @@ public class DrawShapes extends JFrame
             public void mousePressed(MouseEvent e)
             {
                 System.out.printf("mouse pressed at (%d, %d)\n", e.getX(), e.getY());
-                scene.startDrag(e.getPoint());
-                
+                scene.startDrag(e.getPoint());    
             }
 
             /* (non-Javadoc)
@@ -129,6 +139,7 @@ public class DrawShapes extends JFrame
             {
                 System.out.printf("mouse released at (%d, %d)\n", e.getX(), e.getY());
                 scene.stopDrag();
+                //here 
                 repaint();
             }
             
@@ -139,14 +150,27 @@ public class DrawShapes extends JFrame
                 repaint();
             }
 
-            @Override
+    /* here*/       @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
                 // TODO use this to grow/shrink shapes
+            	System.out.printf("Mouse wheel moved!");
+            	int notches = e.getWheelRotation();
+            	if(notches < 0) {
+            		scene.scale(0.5);
+            	System.out.println("Scaling down!");
+            	}
+            	if (notches > 0) 
+            	{
+            		scene.scale(2.0); 
+            		System.out.println("Scaling up!");
+            	}
+            repaint();
             }
             
         };
         shapePanel.addMouseMotionListener(a);
         shapePanel.addMouseListener(a);
+        shapePanel.addMouseWheelListener(a);
     }
     
     /**
@@ -286,8 +310,17 @@ public class DrawShapes extends JFrame
         addToMenu(shapeMenu, "Rectangle", new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Circle");
+                System.out.println("Rectangle");
                 shapeType = ShapeType.RECTANGLE;
+            }
+        });
+        
+     // triangle
+        addToMenu(shapeMenu, "Triangle", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Triangle");
+                shapeType = ShapeType.TRIANGLE;
             }
         });
         
@@ -349,6 +382,18 @@ public class DrawShapes extends JFrame
             		scene.moveSelected(-50, 0);
             	} else if (e.getKeyCode() == KeyEvent.VK_UP) {
             		scene.moveSelected(0, -50);
+            	} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            		scene.moveSelected(0, 50);
+            	} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            		scene.moveSelected(50, 0);
+            	}
+            	else if (e.getKeyCode() == KeyEvent.VK_S) {
+            		scene.scale(2.0);
+            	}
+            	else if (e.getKeyCode() == KeyEvent.VK_D) {
+            		scene.scale(0.5);
+            	} else if(e.getKeyCode()== KeyEvent.VK_Q) {
+            		scene.removeSelected();
             	}
             	repaint();
             }
