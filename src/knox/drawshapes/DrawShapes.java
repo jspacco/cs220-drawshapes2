@@ -1,8 +1,6 @@
 package knox.drawshapes;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -16,11 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
+import javax.swing.*;
 
 @SuppressWarnings("serial")
 public class DrawShapes extends JFrame
@@ -28,7 +22,8 @@ public class DrawShapes extends JFrame
     private enum ShapeType {
         SQUARE,
         CIRCLE,
-        RECTANGLE
+        RECTANGLE,
+        SMALL
     }
     
     private DrawShapesPanel shapePanel;
@@ -36,7 +31,7 @@ public class DrawShapes extends JFrame
     private ShapeType shapeType = ShapeType.SQUARE;
     private Color color = Color.RED;
     private Point startDrag;
-
+    private int size = 100;
 
     public DrawShapes(int width, int height)
     {
@@ -78,16 +73,16 @@ public class DrawShapes extends JFrame
                         scene.addShape(new Square(color, 
                                 e.getX(), 
                                 e.getY(),
-                                100));
+                                size));
                     } else if (shapeType == ShapeType.CIRCLE){
                         scene.addShape(new Circle(color,
                                 e.getPoint(),
-                                100));
+                                size));
                     } else if (shapeType == ShapeType.RECTANGLE) {
                         scene.addShape(new Rectangle(
                                 e.getPoint(),
-                                100, 
-                                200,
+                                size,
+                                size*2,
                                 color));
                     }
                     
@@ -118,6 +113,7 @@ public class DrawShapes extends JFrame
             public void mousePressed(MouseEvent e)
             {
                 System.out.printf("mouse pressed at (%d, %d)\n", e.getX(), e.getY());
+
                 scene.startDrag(e.getPoint());
                 
             }
@@ -136,6 +132,14 @@ public class DrawShapes extends JFrame
             public void mouseDragged(MouseEvent e) {
                 System.out.printf("mouse drag! (%d, %d)\n", e.getX(), e.getY());
                 scene.updateSelectRect(e.getPoint());
+                int i = 5;
+                if (shapeType == ShapeType.SMALL) {
+                    scene.addShape(new Circle(color,
+                            e.getPoint(),
+                            i));
+                    i++;
+
+                }
                 repaint();
             }
 
@@ -281,12 +285,28 @@ public class DrawShapes extends JFrame
                 shapeType = ShapeType.CIRCLE;
             }
         });
-        
+
         
         // operation mode menu
         JMenu operationModeMenu=new JMenu("Operation");
         menuBar.add(operationModeMenu);
-        
+        //size +
+        addToMenu(operationModeMenu, "Size +", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                size += 10;
+            }
+        });
+        //size -
+        addToMenu(operationModeMenu, "Size -", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                size -= 10;
+                if (size <= 0){
+                    size = 10;
+                }
+            }
+        });
         // scale up
         addToMenu(operationModeMenu, "Scale Up", new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -315,8 +335,44 @@ public class DrawShapes extends JFrame
                 System.out.println(text);
             }
         });
-        
+        // reset option
+        addToMenu(operationModeMenu, "Reset", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                DrawShapes shapes=new DrawShapes(700, 700);
+                shapes.setVisible(true);
+                repaint();
+            }
+        });
+        // brush menu
+        JMenu pencilMenu = new JMenu("Pencil");
+        menuBar.add(pencilMenu);
 
+
+        // black color
+        addToMenu(pencilMenu, "Paint", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String text=e.getActionCommand();
+                System.out.println(text);
+                // change the color instance variable to blue
+                color = Color.BLACK;
+                shapeType = ShapeType.SMALL;
+
+            }
+        });
+
+        // eraser
+        addToMenu(pencilMenu, "Eraser", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String text=e.getActionCommand();
+                System.out.println(text);
+                // change the color instance variable to green
+                Color color = UIManager.getColor ( "Panel.background" );
+
+
+                shapeType = ShapeType.SMALL;
+            }
+        });
         // set the menu bar for this frame
         this.setJMenuBar(menuBar);
     }
