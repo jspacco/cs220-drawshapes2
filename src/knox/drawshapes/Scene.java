@@ -218,4 +218,9 @@ public class Scene implements Iterable<IShape>
 			if (s.isSelected()) s.move(dx, dy);
 		}
 	}
+
+	public void clear() {
+		// TODO Auto-generated method stub
+		shapeList.clear();
+	}
 }

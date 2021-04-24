@@ -9,22 +9,35 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 @SuppressWarnings("serial")
-public class DrawShapes extends JFrame
-{
+public class DrawShapes extends JFrame{
+	
+	JLabel label;
+	ImageIcon stars;
+	ImageIcon day;
+	
     private enum ShapeType {
         SQUARE,
         CIRCLE,
@@ -35,7 +48,6 @@ public class DrawShapes extends JFrame
     private Scene scene;
     private ShapeType shapeType = ShapeType.SQUARE;
     private Color color = Color.RED;
-    private Point startDrag;
 
 
     public DrawShapes(int width, int height)
@@ -50,6 +62,13 @@ public class DrawShapes extends JFrame
         this.pack();
         this.setLocation(100,100);
         
+        label = new JLabel();
+        stars = new ImageIcon("stars.jpeg");
+        day = new ImageIcon("hellot.jpeg");
+        this.add(label);
+		this.setVisible(true);
+		this.setLocationRelativeTo(null);
+		label.setIcon(stars);
         // Add key and mouse listeners to our canvas
         initializeMouseListener();
         initializeKeyListener();
@@ -65,10 +84,13 @@ public class DrawShapes extends JFrame
         });
     }
     
+    
     private void initializeMouseListener()
     {
+    	
         MouseAdapter a = new MouseAdapter() {
-            
+        
+        	@Override
             public void mouseClicked(MouseEvent e)
             {
                 System.out.printf("Mouse cliked at (%d, %d)\n", e.getX(), e.getY());
@@ -132,6 +154,12 @@ public class DrawShapes extends JFrame
                 repaint();
             }
             
+            public void mouseEntered(MouseEvent e)
+            {
+                System.out.printf("mouse entered at (%d, %d)\n", e.getX(), e.getY());
+                label.setIcon(day);
+            }
+            
             @Override
             public void mouseDragged(MouseEvent e) {
                 System.out.printf("mouse drag! (%d, %d)\n", e.getX(), e.getY());
@@ -139,10 +167,15 @@ public class DrawShapes extends JFrame
                 repaint();
             }
 
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e) {
-                // TODO use this to grow/shrink shapes
-            }
+        	@Override
+        	public void mouseExited(MouseEvent e) {
+        		// TODO Auto-generated method stub
+        		label.setIcon(stars);
+        		label.setVisible(true);
+
+        	}
+
+           
             
         };
         shapePanel.addMouseMotionListener(a);
@@ -152,7 +185,7 @@ public class DrawShapes extends JFrame
     /**
      * Initialize the menu options
      */
-    private void initializeMenu()
+    public void initializeMenu()
     {
         // menu bar
         JMenuBar menuBar = new JMenuBar();
@@ -181,6 +214,8 @@ public class DrawShapes extends JFrame
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
+                } else {
+                	System.out.println("Cancel!");
                 }
             }
         });
@@ -249,16 +284,15 @@ public class DrawShapes extends JFrame
                 color = Color.BLUE;
             }
         });
-        
+     // Green color
         addToMenu(colorMenu, "Green", new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String text=e.getActionCommand();
+            public void actionPerformed(ActionEvent e) {
+                String text=e.getActionCommand();
                 System.out.println(text);
-                // change the color instance variable to red
+                // change the color instance variable to blue
                 color = Color.GREEN;
-			}
-		});
+            }
+        });
         
         // shape menu
         JMenu shapeMenu = new JMenu("Shape");
@@ -281,6 +315,39 @@ public class DrawShapes extends JFrame
                 shapeType = ShapeType.CIRCLE;
             }
         });
+        
+      //add background
+      JMenu addBackground=new JMenu("Background");
+      menuBar.add(addBackground);
+      
+      // bg1
+      addToMenu(addBackground, "Black", new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+              System.out.println("Black");
+              setBackground(Color.BLACK);
+              
+          }
+      });
+      // bg2
+      addToMenu(addBackground, "Normal", new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+              System.out.println("White");
+              label.setIcon(null);
+              label.setVisible(false);
+          }
+      });
+      // bg3
+      addToMenu(addBackground, "CYAN", new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+              System.out.println("Purple");
+              setBackground(Color.CYAN);
+              
+          }
+      });
+    
         
         
         // operation mode menu
@@ -315,6 +382,15 @@ public class DrawShapes extends JFrame
                 System.out.println(text);
             }
         });
+        
+        addToMenu(operationModeMenu, "Clear", new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				scene.clear();
+				repaint();
+			}
+		});
         
 
         // set the menu bar for this frame
@@ -360,13 +436,31 @@ public class DrawShapes extends JFrame
         });
     }
     
+   public static void addMusic() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+	   File file = new File("kahoot.wav");
+	   AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+	   Clip clip = AudioSystem.getClip();
+	   clip.open(audioStream);
+	   clip.start();
+
+   }
+    
     /**
      * @param args
+     * @throws LineUnavailableException 
+     * @throws IOException 
+     * @throws UnsupportedAudioFileException 
      */
-    public static void main(String[] args)
+    public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException
     {
         DrawShapes shapes=new DrawShapes(700, 600);
         shapes.setVisible(true);
+        
+        addMusic();
+       
+       
     }
+
+
 
 }
