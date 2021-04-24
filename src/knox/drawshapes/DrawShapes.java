@@ -28,7 +28,8 @@ public class DrawShapes extends JFrame
     private enum ShapeType {
         SQUARE,
         CIRCLE,
-        RECTANGLE
+        RECTANGLE,
+        TRIANGLE
     }
     
     private DrawShapesPanel shapePanel;
@@ -89,6 +90,9 @@ public class DrawShapes extends JFrame
                                 100, 
                                 200,
                                 color));
+                    }
+                    else if (shapeType == ShapeType.TRIANGLE) {
+                        scene.addShape(new Triangle(color, e.getPoint(), 100));
                     }
                     
                 } else if (e.getButton()==MouseEvent.BUTTON2) {
@@ -282,6 +286,15 @@ public class DrawShapes extends JFrame
                 shapeType = ShapeType.CIRCLE;
             }
         });
+
+        // triangle
+        addToMenu(shapeMenu, "Triangle", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Triangle");
+                shapeType = ShapeType.TRIANGLE;
+            }
+        });
         
         
         // operation mode menu
@@ -316,7 +329,16 @@ public class DrawShapes extends JFrame
                 System.out.println(text);
             }
         });
+
         
+        addToMenu(operationModeMenu, "Clear", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                scene.clear();
+                repaint();
+            }
+        });
+
 
         // set the menu bar for this frame
         this.setJMenuBar(menuBar);
@@ -342,6 +364,12 @@ public class DrawShapes extends JFrame
             		scene.moveSelected(-50, 0);
             	} else if (e.getKeyCode() == KeyEvent.VK_UP) {
             		scene.moveSelected(0, -50);
+            	}
+                else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+            		scene.moveSelected(50, 0);
+            	}
+                else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+            		scene.moveSelected(0, 50);
             	}
             	repaint();
             }
