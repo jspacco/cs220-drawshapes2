@@ -2,6 +2,7 @@ package knox.drawshapes;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Frame;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -28,7 +29,9 @@ public class DrawShapes extends JFrame
     private enum ShapeType {
         SQUARE,
         CIRCLE,
-        RECTANGLE
+        RECTANGLE,
+        TINYCIRCLE,
+        WEIRD
     }
     
     private DrawShapesPanel shapePanel;
@@ -64,7 +67,7 @@ public class DrawShapes extends JFrame
             }
         });
     }
-    
+   
     private void initializeMouseListener()
     {
         MouseAdapter a = new MouseAdapter() {
@@ -83,7 +86,13 @@ public class DrawShapes extends JFrame
                         scene.addShape(new Circle(color,
                                 e.getPoint(),
                                 100));
-                    } else if (shapeType == ShapeType.RECTANGLE) {
+                    } else if (shapeType == ShapeType.TINYCIRCLE){
+                        scene.addShape(new tinycircle(color,
+                                e.getPoint(),
+                                50));
+                    }
+           
+                     else if (shapeType == ShapeType.RECTANGLE) {
                         scene.addShape(new Rectangle(
                                 e.getPoint(),
                                 100, 
@@ -230,25 +239,16 @@ public class DrawShapes extends JFrame
 
         
         // red color
-        addToMenu(colorMenu, "Red", new ActionListener() {
+        addToMenu(colorMenu, "Transparent Green", new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String text=e.getActionCommand();
                 System.out.println(text);
                 // change the color instance variable to red
                 color = Color.GREEN;
+                
 			}
 		});
-        
-        // blue color
-        addToMenu(colorMenu, "Blue", new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                String text=e.getActionCommand();
-                System.out.println(text);
-                // change the color instance variable to blue
-                color = Color.GREEN;
-            }
-        });
         
         // shape menu
         JMenu shapeMenu = new JMenu("Shape");
@@ -271,8 +271,22 @@ public class DrawShapes extends JFrame
                 shapeType = ShapeType.CIRCLE;
             }
         });
-        
-        
+        // TINY circle
+        addToMenu(shapeMenu, "Tiny Circle", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Circle");
+                shapeType = ShapeType.TINYCIRCLE;
+            }
+        });
+     // weird and random shape
+        addToMenu(shapeMenu, "weird", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Circle");
+                shapeType = ShapeType.WEIRD;
+            }
+        });
         // operation mode menu
         JMenu operationModeMenu=new JMenu("Operation");
         menuBar.add(operationModeMenu);
@@ -304,6 +318,15 @@ public class DrawShapes extends JFrame
                 // currently this just prints
                 System.out.println(text);
             }
+        });
+        
+        addToMenu(operationModeMenu, "Clear", new ActionListener() {
+        	
+        	@Override 
+        	public void actionPerformed(ActionEvent e) {
+        		scene.clear();
+        		repaint();
+        	}
         });
         
 

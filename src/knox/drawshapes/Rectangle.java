@@ -27,7 +27,7 @@ public class Rectangle extends AbstractShape
     @Override
     public void draw(Graphics g) {
         if (isSelected()){
-            g.setColor(color.darker());
+            g.setColor(color.brighter());
         } else {
             g.setColor(getColor());
         }
