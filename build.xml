@@ -1,5 +1,5 @@
 <project name="cs220-DrawShapes2" default="run">
-	<property name="build.dir" value="build"/>
+	<property name="build.dir" value="bin"/>
 	<property name="src.dir" value="src"/>
 
 
