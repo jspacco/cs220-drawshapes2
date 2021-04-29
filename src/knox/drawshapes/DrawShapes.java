@@ -1,5 +1,6 @@
 package knox.drawshapes;
 
+import java.util.Random;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Point;
@@ -28,7 +29,8 @@ public class DrawShapes extends JFrame
     private enum ShapeType {
         SQUARE,
         CIRCLE,
-        RECTANGLE
+        RECTANGLE, 
+        TRIANGLE
     }
     
     private DrawShapesPanel shapePanel;
@@ -89,6 +91,10 @@ public class DrawShapes extends JFrame
                                 100, 
                                 200,
                                 color));
+                    } else if (shapeType == ShapeType.TRIANGLE) {
+                    	scene.addShape(new Triangle(color,
+                                e.getPoint(),
+                                100, 200));
                     }
                     
                 } else if (e.getButton()==MouseEvent.BUTTON2) {
@@ -260,6 +266,22 @@ public class DrawShapes extends JFrame
             }
         });
         
+        //random color
+        addToMenu(colorMenu, "Random Color!", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String text=e.getActionCommand();
+                System.out.println(text);
+                //random ints for random colors
+                Random rand = new Random();
+                float r = rand.nextFloat();
+                float g = rand.nextFloat();
+                float b = rand.nextFloat();
+                Color randColor = new Color(r,g,b);
+             //change the color instance variable to a random color
+                color = randColor;
+            }
+        });
+        
         // shape menu
         JMenu shapeMenu = new JMenu("Shape");
         menuBar.add(shapeMenu);
@@ -279,6 +301,34 @@ public class DrawShapes extends JFrame
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Circle");
                 shapeType = ShapeType.CIRCLE;
+            }
+        });
+        
+        //triangle
+        addToMenu(shapeMenu, "COOL Triangle", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("COOL Triangle");
+                shapeType = ShapeType.TRIANGLE;
+            }
+        });
+        
+        //random shape
+        addToMenu(shapeMenu, "Random Shape", new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            	Random rand = new Random();
+            	//rand num within 1-3 range
+            	int randInt = rand.nextInt((3-1)+1) + 1;
+                System.out.println("Random Shape!");
+                //rand shape based on rand generated num
+                if (randInt == 1) {
+                	shapeType = ShapeType.CIRCLE;
+                } else if (randInt == 2){
+                	shapeType = ShapeType.SQUARE;
+                } else if (randInt == 3) {
+                	shapeType = ShapeType.TRIANGLE;
+                }
             }
         });
         

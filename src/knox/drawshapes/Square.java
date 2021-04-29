@@ -1,7 +1,5 @@
 package knox.drawshapes;
 
-
-
 import java.awt.Color;
 import java.awt.Point;
 
